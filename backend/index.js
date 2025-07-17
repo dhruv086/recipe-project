@@ -4,6 +4,10 @@ import dotenv from "dotenv"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 console.log("Spoonacular API Key:", process.env.SPOONACULAR_API_KEY);
@@ -24,12 +28,12 @@ import spoonacularRoute from "./src/routes/spoonacular.route.js"
 app.use("/api/user",userRoute)
 app.use("/api/recipe", spoonacularRoute)
 
-// Serve static files from the frontend build
-app.use(express.static(path.join(process.cwd(), "dist")));
+// Serve static files from the React build
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Fallback to index.html for SPA routing
-app.get("*", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "dist", "index.html"));
+// For any route not handled by your API, serve index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(process.env.PORT,()=>{
