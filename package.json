@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.11",
     "axios": "^1.10.0",
     "cors": "^2.8.5"
   }

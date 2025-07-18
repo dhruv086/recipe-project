@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_USER = 'http://localhost:5000/api/user';
+const API_USER = import.meta.env.VITE_API_URL + '/api/user';
 
 export default function Auth({ onAuthChange, user, setUser }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -54,16 +54,16 @@ export default function Auth({ onAuthChange, user, setUser }) {
 
   if (user) {
     return (
-      <div className="mb-6 bg-white shadow rounded p-4 w-full max-w-md flex flex-col items-center">
-        <div className="mb-2 text-green-700">Logged in as <b>{user.fullname || user.email}</b></div>
-        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-1 rounded">Logout</button>
+      <div className="mb-6 bg-white dark:bg-gray-800 shadow rounded p-4 w-full max-w-md flex flex-col items-center transition-colors duration-200">
+        <div className="mb-2 text-green-700 dark:text-green-400">Logged in as <b className="text-gray-800 dark:text-white">{user.fullname || user.email}</b></div>
+        <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded transition-colors duration-200">Logout</button>
       </div>
     );
   }
 
   return (
-    <div className="mb-6 text-center bg-white mt-40 shadow rounded p-4 w-full max-w-md">
-      <h2 className="text-xl text-center pb-10 font-semibold mb-2">{isLogin ? 'Login' : 'Sign Up'}</h2>
+    <div className="mb-6 text-center bg-white dark:bg-gray-800 mt-40 shadow rounded p-4 w-full max-w-md transition-colors duration-200">
+      <h2 className="text-xl text-center pb-10 font-semibold mb-2 text-gray-800 dark:text-white">{isLogin ? 'Login' : 'Sign Up'}</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         {!isLogin && (
           <input
@@ -72,7 +72,7 @@ export default function Auth({ onAuthChange, user, setUser }) {
             placeholder="Full Name"
             value={form.fullname}
             onChange={handleChange}
-            className="border rounded px-2 py-1"
+            className="border dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
             required
           />
         )}
@@ -82,7 +82,7 @@ export default function Auth({ onAuthChange, user, setUser }) {
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          className="border rounded px-2 py-1"
+          className="border dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
           required
         />
         <input
@@ -91,20 +91,20 @@ export default function Auth({ onAuthChange, user, setUser }) {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="border rounded px-2 py-1"
+          className="border dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
           required
         />
-        <button type="submit" className="bg-blue-600 text-white py-2 rounded mt-2" disabled={loading}>
+        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded mt-2 transition-colors duration-200" disabled={loading}>
           {loading ? 'Please wait...' : isLogin ? 'Login' : 'Sign Up'}
         </button>
       </form>
       <button
-        className="mt-2 text-blue-600 underline"
+        className="mt-2 text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
         onClick={() => setIsLogin(!isLogin)}
       >
         {isLogin ? 'Need an account? Sign Up' : 'Already have an account? Login'}
       </button>
-      {error && <div className="text-red-600 mt-2">{error}</div>}
+      {error && <div className="text-red-600 dark:text-red-400 mt-2">{error}</div>}
     </div>
   );
 } 

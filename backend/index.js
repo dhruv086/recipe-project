@@ -3,18 +3,18 @@ import connectDB from "./lib/db.js";
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 dotenv.config();
 console.log("Spoonacular API Key:", process.env.SPOONACULAR_API_KEY);
 const app = express()
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL // e.g., https://your-frontend.onrender.com
+];
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: allowedOrigins,
   credentials: true,
 }))
 
@@ -28,12 +28,14 @@ import spoonacularRoute from "./src/routes/spoonacular.route.js"
 app.use("/api/user",userRoute)
 app.use("/api/recipe", spoonacularRoute)
 
-// Serve static files from the React build
-app.use(express.static(path.join(__dirname, 'public')));
-
-// For any route not handled by your API, serve index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({
+    success: false,
+    message: err.message || 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err : {}
+  });
 });
 
 app.listen(process.env.PORT,()=>{
