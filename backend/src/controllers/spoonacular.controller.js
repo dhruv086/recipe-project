@@ -23,7 +23,6 @@ const getRecipesByIngredients = AsyncHandler(async (req, res) => {
       },
     });
     const recipes = response.data;
-    // Fetch detailed info for each recipe
     const detailedRecipes = await Promise.all(recipes.map(async (recipe) => {
       try {
         const infoRes = await axios.get(`${BASE_URL}/${recipe.id}/information`, {
@@ -54,7 +53,6 @@ const getRecipeDetailsByName = AsyncHandler(async (req, res) => {
     throw new ApiError(400, 'Recipe name is required');
   }
   try {
-    // First, search for the recipe by name
     const searchResponse = await axios.get(`${BASE_URL}/complexSearch`, {
       params: {
         query: name,
@@ -67,7 +65,6 @@ const getRecipeDetailsByName = AsyncHandler(async (req, res) => {
       throw new ApiError(404, 'Recipe not found');
     }
     const recipeId = results[0].id;
-    // Get recipe information
     const infoResponse = await axios.get(`${BASE_URL}/${recipeId}/information`, {
       params: {
         apiKey: process.env.SPOONACULAR_API_KEY,
@@ -109,7 +106,6 @@ const saveRecipe = AsyncHandler(async (req, res) => {
   }
 });
 
-// List all saved recipes for the authenticated user
 const getSavedRecipes = AsyncHandler(async (req, res) => {
   try {
     const recipes = await Recipe.find({ owner: req.user._id });
@@ -119,22 +115,6 @@ const getSavedRecipes = AsyncHandler(async (req, res) => {
   }
 });
 
-// Update a saved recipe (title/content)
-const updateRecipe = AsyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { title, content } = req.body;
-  try {
-    const recipe = await Recipe.findOneAndUpdate(
-      { _id: id, owner: req.user._id },
-      { title, content: JSON.stringify(content) },
-      { new: true }
-    );
-    if (!recipe) throw new ApiError(404, 'Recipe not found');
-    return res.status(200).json(new ApiResponse(200, 'Recipe updated successfully', recipe));
-  } catch (error) {
-    throw new ApiError(500, 'Failed to update recipe', error.message);
-  }
-});
 
 // Delete a saved recipe
 const deleteRecipe = AsyncHandler(async (req, res) => {
